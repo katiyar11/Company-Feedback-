@@ -1,0 +1,268 @@
+
+{% extends 'base.html' %}
+ 
+{% block body %}
+  
+  <div class='container'>
+
+	<br>
+    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#add_question">Add Questions</button>
+    
+	
+ <!-- Modal Add Question-->
+ 
+ 
+ <div id="add_question" class="modal fade" role="dialog" >
+    <div class="modal-dialog" >
+       <div class="modal-content">
+          <div class="modal-header">
+  
+             <h4 class="modal-title">Add Questions</h4>
+          </div>
+          <div class="modal-body">
+           <button class="btn btn-primary" id="addText"> Short Type Questions </button>
+           <button class="btn btn-primary" id="addchoice"> Choices Based Question </button>
+ 
+             <form action="{{url_for('addNewQuestions')}}" method="POST" >
+  
+  
+                <div class="form-group" id="parent">
+                   
+               
+                <input type="text" hidden class="form-control"  id="qsn" name="qsn"/>
+                <input type="text" hidden class="form-control"  id="opt" name="opt">
+              
+                <script>
+                            var questionArray=[]
+                            var optionArray= []
+ 
+                          var i=0;  
+                           $('#addText').click(function(){  
+                                 i++;
+                                
+                                 $('#parent').append('<br><div id="row'+i+'"><input type="text" name="qsn_add'+i+'" placeholder="Enter short type Question" class="form-control name_list" onchange="getQsn(this)" /><button type="button" name="remove" id="'+i+'" class="btn btn-danger btn_remove"> Remove </button>');  
+                                  $('<br>');  
+                           });  
+                           $(document).on('click', '.btn_remove', function(){  
+                                 var button_id = $(this).attr("id");   
+                                 $('#row'+button_id+'').remove();  
+                                 }); 
+ 
+              
+                     var r=0;  
+                                               
+ 
+                         $('#addchoice').click(function(){  
+                            r++;
+                               $('#parent').append('<br><div id="red'+r+'" ><input type="text" name="name_add'+r+'" placeholder="Enter choice based Question" class="form-control name_list" id="question'+r+'" onchange="getQsn(this)"/><button type="button" name="remove" id="'+r+'" class="btn btn-danger btn_remove_radio">Remove</button> <br><button type="button" name="name_add'+r+'" id="'+r+'" class="btn-primary btn_add_choices"> Choices </button><br>');
+                                  var questionButton_name = $('#question'+r).attr("name"); 
+                                  console.log(questionButton_name)
+                                
+                                   
+                               $('<br>');  
+ 
+                         });
+ 
+                   $(document).on('click', '.btn_remove_radio', function(){  
+                         var button_id = $(this).attr("id");   
+                         $('#red'+button_id+'').remove();   
+                       });
+ 
+                      var rtx=100
+                      
+                       $(document).on('click', '.btn_add_choices', function(){  
+                         rtx++;
+                         var button_id = $(this).attr("id");  
+                         var button_name = $(this).attr("name");                        
+                         $('#red'+button_id+'').append('<input type="radio" id="add_radio" name="opt'+r+'"/><input type="text" id="txt'+rtx+'" placeholder="Enter option" onchange="myFunction(this)" name="'+button_name+'_'+rtx+'" /> <br><br>');
+                         var op = $('#txt'+rtx).attr("name"); 
+                         console.log(op)
+ 
+                       });
+                       
+                            function myFunction(obj) {
+                               optionArray.push(obj.name)
+                               console.log(optionArray)
+                               // console.log(questionArray);
+                               // console.log(obj.id)
+                               }
+ 
+                             function getQsn(obj) {
+                               questionArray.push(obj.name)
+ 
+                               console.log(questionArray);
+                               
+                            }       
+                           
+ 
+                           function changeToStrig()
+                           {
+                            var qsnStr= questionArray.toString()
+                            var optStr = optionArray.toString()
+                            document.getElementById("qsn").value= qsnStr;
+                            document.getElementById("opt").value= optStr;
+                           }
+ 
+  
+                   </script>
+        
+               
+                </div>
+  
+                <div class="form-group">
+  
+  
+                   <button class="btn btn-success btn-sm"" type="submit" onclick="changeToStrig()">Add Questions</button>
+  
+                 
+                </div>
+  
+  
+             </form>
+  
+  
+          </div>
+  
+  
+          <div class="modal-footer">
+  
+  
+             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+  
+  
+          </div>
+  
+  
+       </div>
+  
+  
+    </div>
+  
+  
+ </div>
+
+
+<br><br>
+<table class="table">
+  <thead>
+    <tr>
+      <th>S.Num</th>
+      <th>Q.ID</th>
+      <th>Question</th>
+      <th>Question Type</th>
+      <th>Options</th>
+	  <th scope="col" colspan='2' style='text-align:center'><h3>Action</h3></th>
+    </tr>
+  </thead>
+  <tbody>
+    
+	{% for row in allQuestions%}
+		<tr>
+			<th scope="row">{{loop.index}}</th>
+		
+         <td>{{row.questionID}}</td>
+         <script>console.log("{{row.questionID}}")</script>
+         <td>{{row.questions}}</td>
+         <td>{{row.question_type}}</td>
+            <td> 
+               {% if row.options != None%}
+               
+              <select name="arr">
+ 
+                <option >Options</option>
+                 {%for j in row.options%}
+ 
+                   
+                   <option value = "{{j}}" >{{j}}</option>
+                    {% endfor %}
+                   </select> 
+                {% endif %}  
+             
+                </td>
+
+            <td>
+                <a href="/update/{{row.questionID}}" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#modaledit{{row.questionID}}">Edit</a>
+                <a href="/deleteQsn/{{row.questionID}}" class="btn btn-danger btn-xs" onclick="return confirm('Are You Sure To Delete Question {{row.questionID}} ?')">Delete</a>
+
+
+            </td>                        
+			
+			
+			<!--update Modal -->
+			<div id="modaledit{{row.questionID}}" class="modal fade" role="dialog">
+                <div class="modal-dialog">              
+                   <div class="modal-content">              
+                      <div class="modal-header">
+                            
+                         <h4 class="modal-title">Update Information</h4>         
+             
+                      </div>             
+              
+                      <div class="modal-body">             
+              
+                         <form action="{{url_for('update')}}" method="POST">              
+              
+                            <div class="form-group">             
+              
+                               <label>Question {{row.questionID}}:</label>
+                                <input type="hidden"  name="id" value="{{row.questionID}}"> 
+                                <input type="hidden"  name="question_type" value="{{row.question_type}}">           
+                               <input type="text" class="form-control" name="question" value="{{row.questions}}">             
+              
+                            </div>            
+                            {% if 'multiple' is in row.question_type%}
+                                {% set count = 1 %}   
+                                 <div class="form-group" id="optDiv">                  
+                   
+                                    <label>Options:</label>
+                                                                                          
+                                       {%for j in row.options%} 
+                                        
+                                           <input type="text" class="form-control" name="{{loop.index}}" value="{{j}}">  
+                                  
+                                           {% set count = count + 1 %}
+
+                                       {% endfor %}
+                                 </div>
+                                 
+                           {% endif %}
+                                        
+          
+
+                            <div class="form-group">
+                           
+                               <button class="btn btn-warning" type="submit">Update</button>
+                            
+                            </div>
+                            
+                         </form>
+                            
+                      </div>
+                            
+                      <div class="modal-footer">
+                            
+                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            
+                      </div>
+                            
+                   </div>
+                            
+                </div>
+              
+             </div>
+			<!-- End update Modal -->
+			
+	
+			
+	
+			
+			
+		</tr>	
+	{% endfor %}
+	
+  </tbody>
+</table>
+	
+</div>
+
+{% endblock %}

@@ -1,0 +1,55 @@
+
+{% extends 'base.html' %}
+ 
+{% block body %}
+
+<div class="container" style="width: 30%; border-color: blue;">
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <div class="notification is-danger">
+            <h2>{{ messages[0] }}</h2>
+        </div>
+    {% endif %}
+    {% endwith %}
+<form class="form-horizontal" action='/add_users' method="POST">
+    <fieldset>
+      <div id="legend" style="text-align: center;">
+        <legend class="">Add Users</legend>
+      </div>
+    
+        <!-- Username -->
+
+        <div class="control-group">
+        
+          <label  for="Username">User Name</label>
+          <div class="controls">
+            <input type="text" name="username"  class="input-xlarge">
+            <p class="help-block"></p>
+          </div>
+        </div>
+   
+      <div class="control-group">
+        <!-- E-mail -->
+        <label for="email">E-mail</label>
+        <div class="controls">
+          <input type="text" id="email" name="email" placeholder="" class="input-xlarge">
+          <p class="help-block"></p>
+        </div>
+      </div>
+   
+    
+   
+
+   
+      <div class="control-group">
+        <!-- Button -->
+        <div class="controls">
+          <button class="btn btn-success">Login</button>
+        </div>
+      </div>
+    </fieldset>
+  </form>
+
+
+ </div>
+ {% endblock %}

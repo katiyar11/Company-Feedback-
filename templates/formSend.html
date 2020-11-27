@@ -1,0 +1,124 @@
+
+{% extends 'base.html' %}
+ 
+{% block body %}
+  
+  <div class='container'>
+	<br>
+
+ <!-- Modal Add Question-->
+ 
+
+
+<br><br>
+<table class="table">
+  <thead>
+    <tr>
+      <th>S.Num</th>
+      <th>Form.ID</th>
+      <th>Form Name</th>
+      <th>Total Questions</th>
+	  <th scope="col" colspan='2' style='text-align:center'><h3>Action</h3></th>
+    </tr>
+  </thead>
+  <tbody>
+    
+	{% for row in forms%}
+		<tr>
+			<th scope="row">{{loop.index}}</th>
+		
+         <td>{{row.formID}}</td>
+         <td>{{row.formName}}}</td>
+         <td>{{row.questions|length}}</td>
+            
+            <td>
+                <a href="/form_send/{{row.formID}}" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#modaledit{{row.formID}}">Select</a>
+                <a href="/deleteFrm/{{row.formID}}" class="btn btn-danger btn-xs" onclick="return confirm('Are You Sure To Delete ?')">Delete</a>
+
+            </td>                        
+			
+			
+			<!-- send Form -->
+			<div id="modaledit{{row.formID}}" class="modal fade" role="dialog">
+                <div class="modal-dialog">              
+                   <div class="modal-content">              
+                      <div class="modal-header">
+                            
+                         <h4 class="modal-title">{{row.formName}}</h4>         
+             
+                      </div>             
+              
+                      <div class="modal-body">             
+              
+                         <form action="{{url_for('form_send')}}" method="POST">              
+              
+                            <div class="form-group">             
+              
+                               <!-- <label>Question:</label> -->
+                               <input type="hidden"  name="id" value="{{row.formID}}", placeholder="" >
+
+                               <!-- <select id="chkveg" multiple="multiple" class="form-control"> -->
+                                    <option value="ZW">Select Users</option>
+                                   
+                              
+                                    <input type="text"  name="email" value="", placeholder="Enter Recipient Mail_ID" required> 
+                                    <!-- <option value="{{row.useremail}}" name="{{row.username}}">{{row.username}} </option> -->
+                                    
+                               <!-- </select>      -->
+                            </div>   
+
+                                  {%for k in row.questions%}
+                                  
+                                 <div class="form-group">                  
+                   
+                                    <label>Question:</label>
+                                    <input type="text" class="form-control" name="question" value="{{k}}" required> 
+                                    {%if row.questions[k] != None %} 
+                                    {%for d in row.questions[k]%}                
+                                    <input type="text" class="form-control" name="options" value="{{d}}" required>
+                                    {%endfor%}
+                                    {%endif%}
+
+                   
+                                 </div>  
+                                 {%endfor%}  
+                                        
+          
+
+                            <div class="form-group">
+                           
+                               <button class="btn btn-primary" type="submit">Send</button>
+                            
+                            </div>
+                            
+                         </form>
+                            
+                      </div>
+                            
+                      <div class="modal-footer">
+                            
+                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            
+                      </div>
+                            
+                   </div>
+                            
+                </div>
+              
+             </div>
+			<!-- End send form -->
+			
+	
+			
+	
+			
+			
+		</tr>	
+	{% endfor %}
+	
+  </tbody>
+</table>
+	
+</div>
+
+{% endblock %}
