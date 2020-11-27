@@ -3,15 +3,15 @@
 ## List of features
 
 
-Admin can register and login .
+User can do registration and login .
 
-Administrators can create, update, and delete employee.
+User can create, update, and delete employee.
 
 User can craete, update, delete Feedback from.
 
-Administrators can see all created Form and send.
+User can see all created Form and send.
 
-Administrators can send form as per mailID and get responses.
+User can send form as per mailID and get responses.
 
 ## Requirements
 
