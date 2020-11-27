@@ -2,7 +2,6 @@
 
 ## List of features
 
-- The following are the main high-level features available through the app:
 
 Admin can register and login .
 
